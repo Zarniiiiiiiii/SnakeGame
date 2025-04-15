@@ -158,9 +158,26 @@ function drawScore() {
   ctx.fillText("Score " + score, canvas.width - 50, 10);
 }
 
+function drawBackground() {
+    for (let row = 0; row < tileCount; row++) {
+        for (let col = 0; col < tileCount; col++) {
+            // Use only the lighter sky blue color
+            ctx.fillStyle = '#87CEEB'; // Sky blue
+            
+            // Draw the tile
+            ctx.fillRect(col * tileCount, row * tileCount, tileSize, tileSize);
+            
+            // Add grid lines in the same color
+            ctx.strokeStyle = '#87CEEB';
+            ctx.lineWidth = 1;
+            ctx.strokeRect(col * tileCount, row * tileCount, tileSize, tileSize);
+        }
+    }
+}
+
 function clearScreen() {
-  ctx.fillStyle = "black";
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
+    // Instead of filling with black, draw the background tiles
+    drawBackground();
 }
 
 function drawSnake() {
