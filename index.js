@@ -189,15 +189,19 @@ function clearScreen() {
 
 function drawSnake() {
   // Draw the snake body
-  ctx.fillStyle = "green";
   for (let i = 0; i < snakeParts.length; i++) {
     let part = snakeParts[i];
-    ctx.fillRect(part.x * tileCount, part.y * tileCount, tileSize, tileSize);
+    ctx.fillStyle = "#27ae60"; // Body color
+    ctx.beginPath();
+    ctx.roundRect(part.x * tileCount, part.y * tileCount, tileSize, tileSize, 5);
+    ctx.fill();
   }
 
   // Draw the head
-  ctx.fillStyle = "orange";
-  ctx.fillRect(headX * tileCount, headY * tileCount, tileSize, tileSize);
+  ctx.fillStyle = "#2ecc71"; // Head color
+  ctx.beginPath();
+  ctx.roundRect(headX * tileCount, headY * tileCount, tileSize, tileSize, [15, 15, 0, 15]);
+  ctx.fill();
 }
 
 function changeSnakePosition() {
@@ -217,8 +221,37 @@ function changeSnakePosition() {
 }
 
 function drawApple() {
-  ctx.fillStyle = "red";
-  ctx.fillRect(appleX * tileCount, appleY * tileCount, tileSize, tileSize);
+  // Draw the apple body
+  ctx.fillStyle = "#e74c3c";
+  ctx.beginPath();
+  ctx.arc(
+    appleX * tileCount + tileSize/2,
+    appleY * tileCount + tileSize/2,
+    tileSize/2,
+    0,
+    Math.PI * 2
+  );
+  ctx.fill();
+
+  // Draw the apple stem
+  ctx.fillStyle = "#2ecc71";
+  ctx.fillRect(
+    appleX * tileCount + tileSize/2 - 1.5,
+    appleY * tileCount - 2,
+    3,
+    8
+  );
+
+  // Draw the apple leaf
+  ctx.beginPath();
+  ctx.arc(
+    appleX * tileCount + tileSize/2 - 2,
+    appleY * tileCount - 4,
+    2.5,
+    0,
+    Math.PI * 2
+  );
+  ctx.fill();
 }
 
 function checkAppleCollision() {
