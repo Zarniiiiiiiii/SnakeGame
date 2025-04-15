@@ -29,7 +29,7 @@ const initialState = {
 };
 
 // Current game state
-let speed = initialState.speed;
+let speed = 5;
 let tileCount = initialState.tileCount;
 let tileSize = initialState.tileSize;
 let headX = initialState.headX;
@@ -77,14 +77,10 @@ document.getElementById('restartButton').addEventListener('click', restartGame);
 
 //game loop
 function drawGame() {
-  // Update velocities first
   xVelocity = inputsXVelocity;
   yVelocity = inputsYVelocity;
 
-  // Update snake position
   changeSnakePosition();
-
-  // Check for collisions after position update
   let result = isGameOver();
   if (result) {
     return;
@@ -95,13 +91,6 @@ function drawGame() {
   drawApple();
   drawSnake();
   drawScore();
-
-  if (score > 5) {
-    speed = 9;
-  }
-  if (score > 10) {
-    speed = 11;
-  }
 
   setTimeout(drawGame, 1000 / speed);
 }
