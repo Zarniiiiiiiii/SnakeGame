@@ -9,29 +9,71 @@ class SnakePart {
     this.y = y;
   }
 }
-// speed of the game
-let speed = 7;
-// size and count of a tile 
-let tileCount = 20;
-let tileSize = canvas.width / tileCount - 2;
-// head of the snake
-let headX = 10;
-let headY = 10;
-let snakeParts = [];
-let tailLength = 2;
-// apple size
-let appleX = 5;
-let appleY = 5;
-// movement
-let inputsXVelocity = 0;
-let inputsYVelocity = 0;
 
-let xVelocity = 0;
-let yVelocity = 0;
+// Initial game state
+const initialState = {
+  speed: 7,
+  tileCount: 20,
+  tileSize: canvas.width / 20 - 2,
+  headX: 10,
+  headY: 10,
+  snakeParts: [],
+  tailLength: 2,
+  appleX: 5,
+  appleY: 5,
+  inputsXVelocity: 0,
+  inputsYVelocity: 0,
+  xVelocity: 0,
+  yVelocity: 0,
+  score: 0
+};
 
-let score = 0;
+// Current game state
+let speed = initialState.speed;
+let tileCount = initialState.tileCount;
+let tileSize = initialState.tileSize;
+let headX = initialState.headX;
+let headY = initialState.headY;
+let snakeParts = initialState.snakeParts;
+let tailLength = initialState.tailLength;
+let appleX = initialState.appleX;
+let appleY = initialState.appleY;
+let inputsXVelocity = initialState.inputsXVelocity;
+let inputsYVelocity = initialState.inputsYVelocity;
+let xVelocity = initialState.xVelocity;
+let yVelocity = initialState.yVelocity;
+let score = initialState.score;
 
 let gulpSound = new Audio("gulp.mp3");
+
+// Add restart functionality
+function restartGame() {
+  // Hide the restart button
+  document.getElementById('restartButton').style.display = 'none';
+  
+  // Reset all game variables to initial state
+  speed = initialState.speed;
+  headX = initialState.headX;
+  headY = initialState.headY;
+  snakeParts = [];
+  tailLength = initialState.tailLength;
+  appleX = initialState.appleX;
+  appleY = initialState.appleY;
+  inputsXVelocity = initialState.inputsXVelocity;
+  inputsYVelocity = initialState.inputsYVelocity;
+  xVelocity = initialState.xVelocity;
+  yVelocity = initialState.yVelocity;
+  score = initialState.score;
+  
+  // Clear the screen
+  clearScreen();
+  
+  // Restart the game loop
+  drawGame();
+}
+
+// Add event listener for restart button
+document.getElementById('restartButton').addEventListener('click', restartGame);
 
 //game loop
 function drawGame() {
@@ -92,25 +134,22 @@ function isGameOver() {
     ctx.fillStyle = "white";
     ctx.font = "50px Verdana";
 
-    if (gameOver) {
-      ctx.fillStyle = "white";
-      ctx.font = "50px Verdana";
-
-      var gradient = ctx.createLinearGradient(0, 0, canvas.width, 0);
-      gradient.addColorStop("0", " magenta");
-      gradient.addColorStop("0.5", "blue");
-      gradient.addColorStop("1.0", "red");
-      // Fill with gradient
-      ctx.fillStyle = gradient;
-
-      ctx.fillText("Game Over!", canvas.width / 6.5, canvas.height / 2);
-    }
+    var gradient = ctx.createLinearGradient(0, 0, canvas.width, 0);
+    gradient.addColorStop("0", " magenta");
+    gradient.addColorStop("0.5", "blue");
+    gradient.addColorStop("1.0", "red");
+    // Fill with gradient
+    ctx.fillStyle = gradient;
 
     ctx.fillText("Game Over!", canvas.width / 6.5, canvas.height / 2);
+    
+    // Show the restart button
+    const restartButton = document.getElementById('restartButton');
+    restartButton.style.display = 'block';
+    restartButton.style.top = (canvas.height / 2 + 40) + 'px';
   }
 
   return gameOver;
-
 }
 
 function drawScore() {

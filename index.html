@@ -6,23 +6,46 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Snake Game</title>
     <style>
-         body{
-            margin:0px;
-            padding:0px;
-            display:flex;
+        body {
+            display: flex;
             flex-direction: column;
-            justify-content: center;
             align-items: center;
+            background-color: #2c3e50;
+            margin: 0;
+            padding: 20px;
         }
-        canvas{
-            box-shadow: black 20px 10px 50px;
-
+        #game {
+            border: 2px solid white;
+        }
+        #restartButton {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            display: none;
+        }
+        #restartButton:hover {
+            background-color: #c0392b;
+        }
+        .game-container {
+            position: relative;
         }
     </style>
 </head>
 <body>
-    <h1>Snake Game</h1>
-    <canvas id="game" width="400" height="400"/>
+    <h1 style="color: white;">Snake Game</h1>
+    <div class="game-container">
+        <canvas id="game" width="400" height="400"></canvas>
+        <button id="restartButton">Restart Game</button>
+    </div>
+    <script src="index.js"></script>
 </body>
-<script src="index.js"></script>
 </html>
