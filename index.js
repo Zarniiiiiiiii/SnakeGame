@@ -77,21 +77,23 @@ document.getElementById('restartButton').addEventListener('click', restartGame);
 
 //game loop
 function drawGame() {
+  // Update velocities first
   xVelocity = inputsXVelocity;
   yVelocity = inputsYVelocity;
 
+  // Update snake position
   changeSnakePosition();
+
+  // Check for collisions after position update
   let result = isGameOver();
   if (result) {
     return;
   }
 
   clearScreen();
-
   checkAppleCollision();
   drawApple();
   drawSnake();
-
   drawScore();
 
   if (score > 5) {
@@ -122,8 +124,15 @@ function isGameOver() {
     gameOver = true;
   }
 
+  // Only check for collision with parts that are behind the head's movement direction
   for (let i = 0; i < snakeParts.length; i++) {
     let part = snakeParts[i];
+    // Skip checking if the part is in front of the head based on movement direction
+    if (xVelocity > 0 && part.x < headX) continue; // Moving right
+    if (xVelocity < 0 && part.x > headX) continue; // Moving left
+    if (yVelocity > 0 && part.y < headY) continue; // Moving down
+    if (yVelocity < 0 && part.y > headY) continue; // Moving up
+    
     if (part.x === headX && part.y === headY) {
       gameOver = true;
       break;
@@ -138,12 +147,10 @@ function isGameOver() {
     gradient.addColorStop("0", " magenta");
     gradient.addColorStop("0.5", "blue");
     gradient.addColorStop("1.0", "red");
-    // Fill with gradient
     ctx.fillStyle = gradient;
 
     ctx.fillText("Game Over!", canvas.width / 6.5, canvas.height / 2);
     
-    // Show the restart button
     const restartButton = document.getElementById('restartButton');
     restartButton.style.display = 'block';
     restartButton.style.top = (canvas.height / 2 + 40) + 'px';
@@ -181,24 +188,32 @@ function clearScreen() {
 }
 
 function drawSnake() {
+  // Draw the snake body
   ctx.fillStyle = "green";
   for (let i = 0; i < snakeParts.length; i++) {
     let part = snakeParts[i];
     ctx.fillRect(part.x * tileCount, part.y * tileCount, tileSize, tileSize);
   }
 
-  snakeParts.push(new SnakePart(headX, headY)); //put an item at the end of the list next to the head
-  while (snakeParts.length > tailLength) {
-    snakeParts.shift(); // remove the furthet item from the snake parts if have more than our tail size.
-  }
-
+  // Draw the head
   ctx.fillStyle = "orange";
   ctx.fillRect(headX * tileCount, headY * tileCount, tileSize, tileSize);
 }
 
 function changeSnakePosition() {
+  // Store the previous head position
+  let prevHeadX = headX;
+  let prevHeadY = headY;
+
+  // Update head position
   headX = headX + xVelocity;
   headY = headY + yVelocity;
+
+  // Update snake parts
+  if (snakeParts.length >= tailLength) {
+    snakeParts.pop();
+  }
+  snakeParts.unshift(new SnakePart(prevHeadX, prevHeadY));
 }
 
 function drawApple() {
@@ -222,7 +237,10 @@ function keyDown(event) {
   //up
   if (event.keyCode == 38 || event.keyCode == 87) {
     //87 is w
+    // Prevent turning up if moving down
     if (inputsYVelocity == 1) return;
+    // Check if the next position would collide with the body
+    if (snakeParts.length > 0 && snakeParts[0].x === headX && snakeParts[0].y === headY - 1) return;
     inputsYVelocity = -1;
     inputsXVelocity = 0;
   }
@@ -230,7 +248,10 @@ function keyDown(event) {
   //down
   if (event.keyCode == 40 || event.keyCode == 83) {
     // 83 is s
+    // Prevent turning down if moving up
     if (inputsYVelocity == -1) return;
+    // Check if the next position would collide with the body
+    if (snakeParts.length > 0 && snakeParts[0].x === headX && snakeParts[0].y === headY + 1) return;
     inputsYVelocity = 1;
     inputsXVelocity = 0;
   }
@@ -238,7 +259,10 @@ function keyDown(event) {
   //left
   if (event.keyCode == 37 || event.keyCode == 65) {
     // 65 is a
+    // Prevent turning left if moving right
     if (inputsXVelocity == 1) return;
+    // Check if the next position would collide with the body
+    if (snakeParts.length > 0 && snakeParts[0].x === headX - 1 && snakeParts[0].y === headY) return;
     inputsYVelocity = 0;
     inputsXVelocity = -1;
   }
@@ -246,7 +270,10 @@ function keyDown(event) {
   //right
   if (event.keyCode == 39 || event.keyCode == 68) {
     //68 is d
+    // Prevent turning right if moving left
     if (inputsXVelocity == -1) return;
+    // Check if the next position would collide with the body
+    if (snakeParts.length > 0 && snakeParts[0].x === headX + 1 && snakeParts[0].y === headY) return;
     inputsYVelocity = 0;
     inputsXVelocity = 1;
   }
